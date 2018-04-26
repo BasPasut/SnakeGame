@@ -1,20 +1,24 @@
 package main;
 
 import lib.*;
+
+import java.awt.Color;
 import java.util.List;
 import java.util.Random;
 
 public class SnakeGame extends AbstractGame {
 
-    private Random random = new Random();
-    private Map map = new Map();
+    protected Random random = new Random();
+    protected Map map = new Map();
+
+    protected Snake snake = new Snake(map,10, 10);
+    protected Food food = new Food(Color.GREEN,15, 15);
 
     public SnakeGame() {
-        // Just sample blocks. Feels free to remove them
-        map.addBlock(new Block(9, 9));
-        map.addBlock(new Block(10, 10));
-        map.addBlock(new Block(11, 11));
-        map.addBlock(new Block(12, 12));
+        for(Block b : snake.getBody()) {
+            map.addBlock(b);
+        }
+        map.addBlock(food);
     }
 
     public int getMapSize() {
@@ -27,31 +31,45 @@ public class SnakeGame extends AbstractGame {
 
     @Override
     protected void gameLogic() {
-        // TODO: This method is called every loop
+        snake.move();
+        // Check if snake eat food
+        for(Block b : snake.getBody()) {
+            if(b.overlapped(food)) {
+                Block newBlock = snake.expand();
+                map.addBlock(newBlock);
+                food.setX(random.nextInt(map.getSize()));
+                food.setY(random.nextInt(map.getSize()));
+                break;
+            }
+        }
+        // Check if snake hit itself
+        if(snake.hitItself()) {
+            end();
+        }
     }
 
     @Override
     protected void handleLeftKey() {
-        System.out.println("Left key is pressed");
-        // TODO: This method is called when left key is pressed
+        snake.setDx(-1);
+        snake.setDy(0);
     }
 
     @Override
     protected void handleRightKey() {
-        System.out.println("Right key is pressed");
-        // TODO: This method is called when right key is pressed
+        snake.setDx(1);
+        snake.setDy(0);
     }
 
     @Override
     protected void handleUpKey() {
-        System.out.println("Up key is pressed");
-        // TODO: This method is called when up key is pressed
+        snake.setDx(0);
+        snake.setDy(-1);
     }
 
     @Override
     protected void handleDownKey() {
-        System.out.println("Down key is pressed");
-        // TODO: This method is called when down key is pressed
+        snake.setDx(0);
+        snake.setDy(1);
     }
 
 }

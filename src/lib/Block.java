@@ -1,11 +1,15 @@
 package lib;
 
+import java.awt.Color;
+
 public class Block {
 
     protected int x;
     protected int y;
+    protected Color color;
 
-    public Block(int x, int y) {
+    public Block(Color color,int x, int y) {
+    	this.color = color;
         this.x = x;
         this.y = y;
     }
@@ -28,5 +32,9 @@ public class Block {
 
     public boolean overlapped(Block b) {
         return x == b.x && y == b.y;
+    }
+    
+    public Color getColor(){
+    	return color;
     }
 }

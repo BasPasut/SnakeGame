@@ -116,8 +116,8 @@ public class SnakeGui extends JFrame implements Observer {
         }
 
         private void paintBlocks(Graphics g) {
-            g.setColor(Color.red);
             for(Block b : game.getBlocks()) {
+            	g.setColor(b.getColor());
                 g.fillRect(b.getX() * blockWidth, b.getY() * blockWidth, blockWidth, blockWidth);
             }
         }

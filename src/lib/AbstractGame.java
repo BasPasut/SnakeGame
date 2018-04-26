@@ -38,7 +38,7 @@ public abstract class AbstractGame extends Observable {
 
     private void delay() {
         try {
-            Thread.sleep(200);
+            Thread.sleep(50);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
