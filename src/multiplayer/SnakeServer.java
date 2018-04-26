@@ -31,7 +31,33 @@ public class SnakeServer extends SnakeGame {
 	}
 	
 	class ServerListener extends Listener{
+		@Override
+		public void connected(Connection connection) {
+			super.connected(connection);
+			Snake newSnake = new Snake(map,10,10);
+			connections.put(connection, newSnake);
+			System.out.println("Client Connected");
+		}
 		
+		@Override
+		public void disconnected(Connection connection) {
+			super.disconnected(connection);
+			connections.remove(connection);
+			System.out.println("Client disconnected");
+		}
+		
+		@Override
+		public void received(Connection connection, Object o) {
+			super.received(connection, o);
+			if(o instanceof Message){
+				Message message = (Message) o;
+				messages.add(message);
+				for(Connection c : connections){
+					c.sendTCP(message);
+				}
+				System.out.println("Server gets message: " + message.text);
+			}
+		}
 	}
 	
 	@Override
