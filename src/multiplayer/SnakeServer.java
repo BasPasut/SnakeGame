@@ -61,17 +61,32 @@ public class SnakeServer extends SnakeGame {
 
 	@Override
 	protected void gameLogic() {
-		System.out.println("Running");
-		System.out.println("Number of snakes: " + connections.size());
 		for(Snake snake : connections.values()){
-			for(Block block : snake.getBody()){
-				System.out.println(block.getX() + "," + block.getY());
-			}
-			System.out.println("------------------------------");
+			snake.move();
 		}
-		System.out.println("##################################");
+		sendDataToClients();
 	}
 
+	public void sendDataToClients(){
+		GameData gameData = new GameData();
+		for(Snake snake : connections.values()){
+			for(Block block : snake.getBody()){
+				BlockData data = new BlockData();
+				data.x = block.getX();
+				data.y = block.getY();
+				data.r = block.getColor().getRed();
+				data.g = block.getColor().getGreen();
+				data.b = block.getColor().getBlue();
+				gameData.blockData.add(data);
+			}
+		}
+		//send out
+		for(Connection c : connections.keySet()){
+			c.sendTCP(gameData);
+		}
+		
+	}
+	
 	public static void main(String[] args) {
 		SnakeServer server = null;
 		try {

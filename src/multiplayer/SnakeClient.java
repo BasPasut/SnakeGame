@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
 
 public class SnakeClient {
 	
@@ -18,6 +20,17 @@ public class SnakeClient {
 		
 		client.start();
 		client.connect(5000, "127.0.0.1", 54333);
+	}
+	
+	class ClientListener extends Listener{
+		@Override
+		public void received(Connection connection, Object o) {
+			super.received(connection, o);
+			if(o instanceof GameData){
+				GameData gameData = (GameData) o;
+				System.out.println("Receive game data from Server");
+			}
+		}
 	}
 	
 	public static void main(String[] args) {
